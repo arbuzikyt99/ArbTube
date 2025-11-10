@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузить видео - ArbTube</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/"><span class="logo-red">Arb</span><span class="logo-white">Tube</span></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Поиск видео...">
+                <button id="search-btn">🔍</button>
+            </div>
+            <nav class="nav">
+                {% if session.username %}
+                    <a href="/upload" class="btn-upload">📤 Загрузить</a>
+                    <div class="profile-menu-trigger">
+                        <div id="profile-avatar">{{ session.username[0]|upper }}</div>
+                        <div class="profile-popup-menu">
+                            <div class="profile-popup-header">
+                                <div class="popup-avatar">{{ session.username[0]|upper }}</div>
+                                <div>
+                                    <div class="popup-name">Арбузик</div>
+                                    <div class="popup-username">@{{ session.username }}</div>
+                                    <a href="/channel/{{ session.username }}" class="profile-channel-link">Посмотреть канал</a>
+                                </div>
+                            </div>
+                            <div class="profile-popup-list">
+                                <a href="#" class="profile-popup-item">Аккаунт Google</a>
+                                <a href="#" class="profile-popup-item">Сменить аккаунт</a>
+                                <a href="/logout" class="profile-popup-item">Выйти</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="/studio" class="profile-popup-item">Творческая студия</a>
+                                <a href="#" class="profile-popup-item">Покупки и подписки</a>
+                                <a href="#" class="profile-popup-item">Ваши данные на ArbTube</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="#" class="profile-popup-item">Тема: как на устройстве</a>
+                                <a href="#" class="profile-popup-item">Язык: Русский</a>
+                                <a href="#" class="profile-popup-item">Страна: Россия</a>
+                                <a href="#" class="profile-popup-item">Настройки</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="btn-login">Войти</a>
+                    <a href="/register" class="btn-register">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content upload-page">
+        <div class="upload-container">
+            <h1>Загрузить видео</h1>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="upload-section">
+                    <label for="video-file" class="upload-label">
+                        <div class="upload-area">
+                            <span class="upload-icon">📁</span>
+                            <p>Выберите видео файл</p>
+                            <p class="upload-hint">MP4, AVI, MOV, WEBM (макс. 500MB)</p>
+                        </div>
+                        <input type="file" id="video-file" name="video" accept="video/*" required>
+                    </label>
+                    <div id="file-info" class="file-info"></div>
+                    <div id="video-preview-container" class="video-preview-container" style="display: none;">
+                        <h3>Предпросмотр видео:</h3>
+                        <video id="video-preview" controls class="video-preview-player" preload="metadata">
+                            Ваш браузер не поддерживает воспроизведение видео.
+                        </video>
+                        <div id="video-duration" class="video-duration-info"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="video-title">Название видео</label>
+                    <input type="text" id="video-title" name="title" required placeholder="Введите название видео">
+                </div>
+                
+                <div class="form-group">
+                    <label for="video-description">Описание</label>
+                    <textarea id="video-description" name="description" rows="5" placeholder="Опишите ваше видео"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="video-thumbnail">Превью (опционально)</label>
+                    <label for="thumbnail-file" class="thumbnail-upload-label">
+                        <div class="thumbnail-upload-area">
+                            <span class="thumbnail-icon">🖼️</span>
+                            <p>Выберите изображение для превью</p>
+                            <p class="thumbnail-hint">JPG, PNG, GIF (макс. 10MB)</p>
+                        </div>
+                        <input type="file" id="thumbnail-file" name="thumbnail" accept="image/*">
+                    </label>
+                    <div id="thumbnail-preview-container" class="thumbnail-preview-container" style="display: none;">
+                        <h4>Предпросмотр превью:</h4>
+                        <img id="thumbnail-preview" class="thumbnail-preview-image" src="" alt="Превью">
+                        <button type="button" id="remove-thumbnail" class="btn-remove-thumbnail">✕ Удалить</button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="submit-btn">Загрузить видео</button>
+                <div id="upload-progress" class="upload-progress"></div>
+            </form>
+        </div>
+    </main>
+
+    <script src="/static/js/upload.js"></script>
+</body>
+</html>
+

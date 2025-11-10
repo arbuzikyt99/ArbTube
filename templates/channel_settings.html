@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки канала - ArbTube</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/"><span class="logo-red">Arb</span><span class="logo-white">Tube</span></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Поиск видео...">
+                <button id="search-btn">🔍</button>
+            </div>
+            <nav class="nav">
+                {% if session.username %}
+                    <a href="/upload" class="btn-upload">📤 Загрузить</a>
+                    <div class="profile-menu-trigger">
+                        <div id="profile-avatar">{{ session.username[0]|upper }}</div>
+                        <div class="profile-popup-menu">
+                            <div class="profile-popup-header">
+                                <div class="popup-avatar">{{ session.username[0]|upper }}</div>
+                                <div>
+                                    <div class="popup-name">Арбузик</div>
+                                    <div class="popup-username">@{{ session.username }}</div>
+                                    <a href="/channel/{{ session.username }}" class="profile-channel-link">Посмотреть канал</a>
+                                </div>
+                            </div>
+                            <div class="profile-popup-list">
+                                <a href="#" class="profile-popup-item">Аккаунт Google</a>
+                                <a href="#" class="profile-popup-item">Сменить аккаунт</a>
+                                <a href="/logout" class="profile-popup-item">Выйти</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="/studio" class="profile-popup-item">Творческая студия</a>
+                                <a href="#" class="profile-popup-item">Покупки и подписки</a>
+                                <a href="#" class="profile-popup-item">Ваши данные на ArbTube</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="#" class="profile-popup-item">Тема: как на устройстве</a>
+                                <a href="#" class="profile-popup-item">Язык: Русский</a>
+                                <a href="#" class="profile-popup-item">Страна: Россия</a>
+                                <a href="#" class="profile-popup-item">Настройки</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="btn-login">Войти</a>
+                    <a href="/register" class="btn-register">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content channel-settings-page">
+        <div class="settings-container">
+            <h1>Настройки канала</h1>
+            
+            <div class="settings-section">
+                <h2>Основная информация</h2>
+                <form id="channel-settings-form">
+                    <div class="form-group">
+                        <label for="channel-name">Название канала</label>
+                        <input type="text" id="channel-name" name="channel_name" value="{{ user.channel_name or user.username }}" placeholder="Название канала">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="channel-description">Описание канала</label>
+                        <textarea id="channel-description" name="description" rows="5" placeholder="Опишите ваш канал"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">Сохранить изменения</button>
+                </form>
+            </div>
+            
+            <div class="settings-section">
+                <h2>Видео</h2>
+                <div class="settings-actions">
+                    <a href="/upload" class="btn-action">📤 Загрузить видео</a>
+                    <a href="/channel/{{ session.username }}" class="btn-action">👁️ Просмотреть канал</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/channel_settings.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Творческая студия - ArbTube</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/"><span class="logo-red">Arb</span><span class="logo-white">Tube</span></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Поиск видео...">
+                <button id="search-btn">🔍</button>
+            </div>
+            <nav class="nav">
+                {% if session.username %}
+                    <a href="/upload" class="btn-upload">📤 Загрузить</a>
+                    <div class="profile-menu-trigger">
+                        <div id="profile-avatar">{{ session.username[0]|upper }}</div>
+                        <div class="profile-popup-menu">
+                            <div class="profile-popup-header">
+                                <div class="popup-avatar">{{ session.username[0]|upper }}</div>
+                                <div>
+                                    <div class="popup-name">Арбузик</div>
+                                    <div class="popup-username">@{{ session.username }}</div>
+                                    <a href="/channel/{{ session.username }}" class="profile-channel-link">Посмотреть канал</a>
+                                </div>
+                            </div>
+                            <div class="profile-popup-list">
+                                <a href="#" class="profile-popup-item">Аккаунт Google</a>
+                                <a href="#" class="profile-popup-item">Сменить аккаунт</a>
+                                <a href="/logout" class="profile-popup-item">Выйти</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="/studio" class="profile-popup-item">Творческая студия</a>
+                                <a href="#" class="profile-popup-item">Покупки и подписки</a>
+                                <a href="#" class="profile-popup-item">Ваши данные на ArbTube</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="#" class="profile-popup-item">Тема: как на устройстве</a>
+                                <a href="#" class="profile-popup-item">Язык: Русский</a>
+                                <a href="#" class="profile-popup-item">Страна: Россия</a>
+                                <a href="#" class="profile-popup-item">Настройки</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="btn-login">Войти</a>
+                    <a href="/register" class="btn-register">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <div class="studio-layout">
+        <aside class="studio-sidebar">
+            <div class="studio-sidebar-content">
+                <a href="/studio" class="studio-sidebar-item active">
+                    <span class="studio-icon">📊</span>
+                    <span>Аналитика</span>
+                </a>
+                <a href="/studio" class="studio-sidebar-item">
+                    <span class="studio-icon">📹</span>
+                    <span>Контент</span>
+                </a>
+                <a href="/channel/settings" class="studio-sidebar-item">
+                    <span class="studio-icon">⚙️</span>
+                    <span>Настройки</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="studio-main">
+            <div class="studio-header">
+                <h1>Творческая студия</h1>
+            </div>
+
+            <!-- Статистика канала -->
+            <div class="studio-stats">
+                <div class="stat-card">
+                    <div class="stat-value">{{ total_views }}</div>
+                    <div class="stat-label">Просмотров</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ subscribers_count }}</div>
+                    <div class="stat-label">Подписчиков</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ total_videos }}</div>
+                    <div class="stat-label">Видео</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ total_likes }}</div>
+                    <div class="stat-label">Лайков</div>
+                </div>
+            </div>
+
+            <!-- Список видео -->
+            <div class="studio-content-section">
+                <div class="studio-content-header">
+                    <h2>Ваши видео</h2>
+                    <a href="/upload" class="btn-upload-video">+ Загрузить видео</a>
+                </div>
+
+                {% if videos %}
+                <div class="studio-videos-table">
+                    <div class="studio-table-header">
+                        <div class="studio-col-video">Видео</div>
+                        <div class="studio-col-visibility">Видимость</div>
+                        <div class="studio-col-restrictions">Ограничения</div>
+                        <div class="studio-col-date">Дата</div>
+                        <div class="studio-col-views">Просмотры</div>
+                        <div class="studio-col-actions">Действия</div>
+                    </div>
+                    {% for video in videos %}
+                    <div class="studio-table-row" data-video-id="{{ video.id }}">
+                        <div class="studio-col-video">
+                            <div class="studio-video-info">
+                                <div class="studio-video-thumbnail">
+                                    {% if video.thumbnail %}
+                                        <img src="/thumbnails/{{ video.thumbnail }}" alt="{{ video.title }}">
+                                    {% else %}
+                                        <div class="default-thumbnail-small">🎬</div>
+                                    {% endif %}
+                                </div>
+                                <div class="studio-video-details">
+                                    <a href="/watch/{{ video.id }}" class="studio-video-title">{{ video.title }}</a>
+                                    <div class="studio-video-id">ID: {{ video.id }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="studio-col-visibility">
+                            <span class="visibility-badge">Публичное</span>
+                        </div>
+                        <div class="studio-col-restrictions">
+                            <span class="restrictions-text">Нет</span>
+                        </div>
+                        <div class="studio-col-date">
+                            {{ video.created_at.strftime('%d.%m.%Y') }}
+                        </div>
+                        <div class="studio-col-views">
+                            {{ video.views }}
+                        </div>
+                        <div class="studio-col-actions">
+                            <button class="studio-action-btn" onclick="editVideo({{ video.id }})">✏️</button>
+                            <button class="studio-action-btn delete-btn" onclick="deleteVideo({{ video.id }})">🗑️</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="studio-empty">
+                    <h3>У вас пока нет видео</h3>
+                    <p>Начните загружать контент, чтобы он появился здесь</p>
+                    <a href="/upload" class="btn-upload-large">Загрузить первое видео</a>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+    <script>
+        function deleteVideo(videoId) {
+            if (!confirm('Вы уверены, что хотите удалить это видео? Это действие нельзя отменить.')) {
+                return;
+            }
+            
+            fetch(`/api/studio/delete/${videoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.error || 'Ошибка при удалении видео');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const row = document.querySelector(`[data-video-id="${videoId}"]`);
+                    if (row) {
+                        row.remove();
+                    }
+                    // Перезагружаем страницу для обновления статистики
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
+                } else {
+                    alert('Ошибка при удалении видео: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка при удалении видео: ' + error.message);
+            });
+        }
+        
+        function editVideo(videoId) {
+            window.location.href = `/watch/${videoId}`;
+        }
+    </script>
+</body>
+</html>
+

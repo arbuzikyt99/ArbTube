@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ video.title }} - ArbTube</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/"><span class="logo-red">Arb</span><span class="logo-white">Tube</span></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Поиск видео...">
+                <button id="search-btn">🔍</button>
+            </div>
+            <nav class="nav">
+                {% if session.username %}
+                    <a href="/upload" class="btn-upload">📤 Загрузить</a>
+                    <div class="profile-menu-trigger">
+                        <div id="profile-avatar">{{ session.username[0]|upper }}</div>
+                        <div class="profile-popup-menu">
+                            <div class="profile-popup-header">
+                                <div class="popup-avatar">{{ session.username[0]|upper }}</div>
+                                <div>
+                                    <div class="popup-name">Арбузик</div>
+                                    <div class="popup-username">@{{ session.username }}</div>
+                                    <a href="/channel/{{ session.username }}" class="profile-channel-link">Посмотреть канал</a>
+                                </div>
+                            </div>
+                            <div class="profile-popup-list">
+                                <a href="#" class="profile-popup-item">Аккаунт Google</a>
+                                <a href="#" class="profile-popup-item">Сменить аккаунт</a>
+                                <a href="/logout" class="profile-popup-item">Выйти</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="/studio" class="profile-popup-item">Творческая студия</a>
+                                <a href="#" class="profile-popup-item">Покупки и подписки</a>
+                                <a href="#" class="profile-popup-item">Ваши данные на ArbTube</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="#" class="profile-popup-item">Тема: как на устройстве</a>
+                                <a href="#" class="profile-popup-item">Язык: Русский</a>
+                                <a href="#" class="profile-popup-item">Страна: Россия</a>
+                                <a href="#" class="profile-popup-item">Настройки</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="btn-login">Войти</a>
+                    <a href="/register" class="btn-register">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content watch-page">
+        <div class="watch-container">
+            <div class="video-player-section">
+                <video id="video-player" controls class="video-player">
+                    <source src="/videos/{{ video.filename }}" type="video/mp4">
+                    Ваш браузер не поддерживает видео тег.
+                </video>
+                
+                <div class="video-details">
+                    <h1 class="video-title-main">{{ video.title }}</h1>
+                    <div class="video-meta">
+                        <div class="video-stats-main">
+                            <span>{{ video.views }} просмотров</span>
+                            <span>•</span>
+                            <span>{{ video.created_at.strftime('%d %B %Y') }}</span>
+                        </div>
+                        <div class="video-actions">
+                            <button class="btn-like {% if is_liked %}active{% endif %}" data-video-id="{{ video.id }}">
+                                👍 <span class="like-count">{{ video.likes }}</span>
+                            </button>
+                            <button class="btn-dislike {% if is_disliked %}active{% endif %}" data-video-id="{{ video.id }}">
+                                👎 <span class="dislike-count">{{ video.dislikes }}</span>
+                            </button>
+                            <button class="btn-watch-later" data-video-id="{{ video.id }}">⏱️ Сохранить</button>
+                            <button class="btn-share">📤 Поделиться</button>
+                        </div>
+                    </div>
+                    
+                    <div class="video-author-info">
+                        <a href="/channel/{{ video.author.username }}" class="author-link">
+                            <div class="author-avatar">{{ video.author.username[0].upper() }}</div>
+                            <div class="author-details">
+                                <p class="author-name">{{ video.author.username }}</p>
+                                <p class="author-subscribers">Подписчики</p>
+                            </div>
+                        </a>
+                        {% if not is_own_video %}
+                        <button class="btn-subscribe {% if is_subscribed %}subscribed{% endif %}" data-channel="{{ video.author.username }}">
+                            {% if is_subscribed %}Подписаны{% else %}Подписаться{% endif %}
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="video-description">
+                        <p>{{ video.description or 'Описание отсутствует' }}</p>
+                    </div>
+                </div>
+                
+                <div class="comments-section">
+                    <h2>Комментарии</h2>
+                    <div id="comments-container">
+                        <!-- Комментарии будут загружены здесь -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h3>Рекомендуемые видео</h3>
+                <div class="related-videos">
+                    {% for related_video in related_videos %}
+                    <div class="related-video-card" onclick="window.location.href='/watch/{{ related_video.id }}'">
+                        <div class="related-video-thumbnail">
+                            {% if related_video.thumbnail %}
+                                <img src="/thumbnails/{{ related_video.thumbnail }}" alt="{{ related_video.title }}">
+                            {% else %}
+                                <div class="default-thumbnail-small">🎬</div>
+                            {% endif %}
+                        </div>
+                        <div class="related-video-info">
+                            <h4>{{ related_video.title }}</h4>
+                            <p>{{ related_video.author.username }}</p>
+                            <p>{{ related_video.views }} просмотров</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/watch.js"></script>
+</body>
+</html>
+

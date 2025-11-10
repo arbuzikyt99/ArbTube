@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Библиотека - ArbTube</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/"><span class="logo-red">Arb</span><span class="logo-white">Tube</span></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Поиск видео...">
+                <button id="search-btn">🔍</button>
+            </div>
+            <nav class="nav">
+                {% if session.username %}
+                    <a href="/upload" class="btn-upload">📤 Загрузить</a>
+                    <div class="profile-menu-trigger">
+                        <div id="profile-avatar">{{ session.username[0]|upper }}</div>
+                        <div class="profile-popup-menu">
+                            <div class="profile-popup-header">
+                                <div class="popup-avatar">{{ session.username[0]|upper }}</div>
+                                <div>
+                                    <div class="popup-name">Арбузик</div>
+                                    <div class="popup-username">@{{ session.username }}</div>
+                                    <a href="/channel/{{ session.username }}" class="profile-channel-link">Посмотреть канал</a>
+                                </div>
+                            </div>
+                            <div class="profile-popup-list">
+                                <a href="#" class="profile-popup-item">Аккаунт Google</a>
+                                <a href="#" class="profile-popup-item">Сменить аккаунт</a>
+                                <a href="/logout" class="profile-popup-item">Выйти</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="/studio" class="profile-popup-item">Творческая студия</a>
+                                <a href="#" class="profile-popup-item">Покупки и подписки</a>
+                                <a href="#" class="profile-popup-item">Ваши данные на ArbTube</a>
+                                <div class="profile-popup-separator"></div>
+                                <a href="#" class="profile-popup-item">Тема: как на устройстве</a>
+                                <a href="#" class="profile-popup-item">Язык: Русский</a>
+                                <a href="#" class="profile-popup-item">Страна: Россия</a>
+                                <a href="#" class="profile-popup-item">Настройки</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="btn-login">Войти</a>
+                    <a href="/register" class="btn-register">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar-nav">
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <a href="/" class="sidebar-item">
+                        <span class="sidebar-icon">🏠</span>
+                        <span class="sidebar-text">Главная</span>
+                    </a>
+                    <a href="/shorts" class="sidebar-item">
+                        <span class="sidebar-icon">📹</span>
+                        <span class="sidebar-text">Shorts</span>
+                    </a>
+                    {% if session.username %}
+                    <a href="/subscriptions" class="sidebar-item">
+                        <span class="sidebar-icon">📺</span>
+                        <span class="sidebar-text">Подписки</span>
+                    </a>
+                    {% endif %}
+                </div>
+                
+                {% if session.username %}
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Вы</div>
+                    <a href="/library" class="sidebar-item active">
+                        <span class="sidebar-icon">📚</span>
+                        <span class="sidebar-text">Библиотека</span>
+                    </a>
+                    <a href="/history" class="sidebar-item">
+                        <span class="sidebar-icon">🕐</span>
+                        <span class="sidebar-text">История</span>
+                    </a>
+                    <a href="/channel/{{ session.username }}" class="sidebar-item">
+                        <span class="sidebar-icon">🎬</span>
+                        <span class="sidebar-text">Ваши видео</span>
+                    </a>
+                    <a href="/watch-later" class="sidebar-item">
+                        <span class="sidebar-icon">⏱️</span>
+                        <span class="sidebar-text">Смотреть позже</span>
+                    </a>
+                    <a href="/liked" class="sidebar-item">
+                        <span class="sidebar-icon">👍</span>
+                        <span class="sidebar-text">Понравившиеся</span>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <h1 class="page-title">Библиотека</h1>
+                <div class="library-sections">
+                    <a href="/history" class="library-section-card">
+                        <div class="library-icon">🕐</div>
+                        <div class="library-info">
+                            <h2>История</h2>
+                            <p>Видео, которые вы смотрели</p>
+                        </div>
+                    </a>
+                    <a href="/watch-later" class="library-section-card">
+                        <div class="library-icon">⏱️</div>
+                        <div class="library-info">
+                            <h2>Смотреть позже</h2>
+                            <p>Видео, сохраненные для просмотра</p>
+                        </div>
+                    </a>
+                    <a href="/liked" class="library-section-card">
+                        <div class="library-icon">👍</div>
+                        <div class="library-info">
+                            <h2>Понравившиеся</h2>
+                            <p>Видео, которые вам понравились</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
+
